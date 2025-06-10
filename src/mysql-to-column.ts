@@ -55,6 +55,9 @@ export class MysqlToColumn
 			canBeNull:     row.IS_NULLABLE === 'YES',
 			default:       row.COLUMN_DEFAULT
 		})
+		if ((column.default === null) && !column.canBeNull) {
+			column.default = undefined
+		}
 		return column
 	}
 

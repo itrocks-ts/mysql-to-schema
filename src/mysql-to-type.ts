@@ -24,14 +24,14 @@ export class MysqlToType
 				return new Type('float', {
 					length:    this.length(rawType, mysqlType),
 					precision: this.precision(rawType, mysqlType),
-					signed:    mysqlType.indexOf('unsigned') < 0,
-					zeroFill:  mysqlType.indexOf('zerofill') > 0
+					signed:    !mysqlType.includes('unsigned'),
+					zeroFill:  mysqlType.includes('zerofill')
 				})
 			case 'bigint': case 'int': case 'integer': case 'mediumint': case 'smallint': case 'tinyint':
 				return new Type('integer', {
 					length:   this.length(rawType, mysqlType),
-					signed:   mysqlType.indexOf('unsigned') < 0,
-					zeroFill: mysqlType.indexOf('zerofill') > 0
+					signed:   !mysqlType.includes('unsigned'),
+					zeroFill: mysqlType.includes('zerofill')
 				})
 			case 'enum': case 'set':
 				return new Type(rawType, {
@@ -48,6 +48,7 @@ export class MysqlToType
 		// char, longtext, mediumtext, text, tinytext, varchar
 		return new Type('string', {
 			collate:        this.collate(mysqlType),
+			length:         this.length(rawType, mysqlType),
 			variableLength: rawType.startsWith('var')
 		})
 	}
@@ -120,6 +121,52 @@ export class MysqlToType
 				Math.min(mysqlType.indexOf(')', position), (mysqlType + ',').indexOf(',', position))
 			)
 			: this.defaultLength(rawType)
+	}
+
+	normalize(type: Type)
+	{
+		switch (type.name) {
+			case 'bit':
+				type.length = 64
+				break
+			case 'blob':
+			case 'string':
+				if (type.length === undefined)     Object.assign(type, { length: 255, variableLength: true })
+				else if (type.length > 16_777_215) type.length = 4_294_967_295
+				else if (type.length > 65_535)     type.length = 16_777_215
+				else if (type.length > 255)        type.length = 65_535
+				else                               type.length = 255
+				break
+			case 'boolean':
+				type.length = 1
+				break
+			case 'date':
+				type.length = 10
+				break
+			case 'datetime':
+				type.length = 19 // missing fractional seconds
+				break
+			case 'float':
+				type.length = 53
+				break
+			case 'integer':
+				if (type.length === undefined) type.length = 20
+				else if (type.length > 10)     type.length = 20
+				else if (type.length > 8)      type.length = 10
+				else if (type.length > 5)      type.length = 8
+				else if (type.length > 3)      type.length = 5
+				else                           type.length = 3
+				break
+			case 'enum': case 'set':
+				type.length = 1_048_575
+				break
+			case 'time':
+				type.length = 8 // missing fractional seconds
+				break
+			case 'year':
+				type.length = 4
+				break
+		}
 	}
 
 	precision(rawType: string, mysqlType: string): number | undefined

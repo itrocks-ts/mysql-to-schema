@@ -56,4 +56,12 @@ export class MysqlToTable
 		})
 	}
 
+	normalize(table: Table)
+	{
+		const mysqlToType = this.mysqlToColumn.mysqlToType
+		for (const column of table.columns) {
+			mysqlToType.normalize(column.type)
+		}
+	}
+
 }
