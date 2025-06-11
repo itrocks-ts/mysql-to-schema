@@ -1,6 +1,6 @@
-import { Type } from '@itrocks/table-schema'
+import { Type } from '@itrocks/schema'
 
-export class MysqlToType
+export class ToType
 {
 
 	convert(mysqlType: string): Type

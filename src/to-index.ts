@@ -1,6 +1,6 @@
-import { Index }      from '@itrocks/table-schema'
-import { IndexKey }   from '@itrocks/table-schema'
-import { IndexType }  from '@itrocks/table-schema'
+import { Index }      from '@itrocks/schema'
+import { IndexKey }   from '@itrocks/schema'
+import { IndexType }  from '@itrocks/schema'
 import { Connection } from 'mariadb'
 
 export interface MysqlIndex
@@ -20,7 +20,7 @@ export interface MysqlIndexKey
 export interface MysqlIndexRow extends MysqlIndex, MysqlIndexKey
 {}
 
-export class MysqlToIndex
+export class ToIndex
 {
 
 	constructor(public connection: Connection)

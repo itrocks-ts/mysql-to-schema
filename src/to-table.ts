@@ -1,7 +1,7 @@
-import { Table }         from '@itrocks/table-schema'
-import { Connection }    from 'mariadb'
-import { MysqlToColumn } from './mysql-to-column'
-import { MysqlToIndex }  from './mysql-to-index'
+import { Table }      from '@itrocks/schema'
+import { Connection } from 'mariadb'
+import { ToColumn }   from './to-column'
+import { ToIndex }    from './to-index'
 
 export interface MysqlTable
 {
@@ -10,17 +10,17 @@ export interface MysqlTable
 	TABLE_NAME:      string
 }
 
-export class MysqlToTable
+export class ToTable
 {
 
-	mysqlToColumn: MysqlToColumn
-	mysqlToIndex:  MysqlToIndex
+	toColumn: ToColumn
+	toIndex:  ToIndex
 
 	constructor(
 		public connection: Connection,
 	) {
-		this.mysqlToColumn = new MysqlToColumn(this.connection)
-		this.mysqlToIndex  = new MysqlToIndex(this.connection)
+		this.toColumn = new ToColumn(this.connection)
+		this.toIndex  = new ToIndex(this.connection)
 	}
 
 	async convert(tableName: string, databaseName?: string): Promise<Table>
@@ -50,17 +50,17 @@ export class MysqlToTable
 	{
 		return new Table(row.TABLE_NAME, {
 			collation: row.TABLE_COLLATION,
-			columns:   await this.mysqlToColumn.convertMultiple(row.TABLE_NAME, databaseName),
+			columns:   await this.toColumn.convertMultiple(row.TABLE_NAME, databaseName),
 			engine:    row.ENGINE,
-			indexes:   await this.mysqlToIndex.convertMultiple(row.TABLE_NAME, databaseName)
+			indexes:   await this.toIndex.convertMultiple(row.TABLE_NAME, databaseName)
 		})
 	}
 
 	normalize(table: Table)
 	{
-		const mysqlToType = this.mysqlToColumn.mysqlToType
+		const toType = this.toColumn.toType
 		for (const column of table.columns) {
-			mysqlToType.normalize(column.type)
+			toType.normalize(column.type)
 		}
 	}
 

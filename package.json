@@ -4,7 +4,7 @@
 		"email": "baptiste@pillot.fr"
 	},
 	"dependencies": {
-		"@itrocks/table-schema": "latest",
+		"@itrocks/schema": "latest",
 		"mariadb": "^3.4"
 	},
 	"description": "Extracts a MySQL table structure and converts it into a table schema",
@@ -15,8 +15,8 @@
 		"node": ">=18"
 	},
 	"exports": {
-		"import": "./esm/mysql-to-table.js",
-		"require": "./cjs/mysql-to-table.js"
+		"import": "./esm/mysql-to-schema.js",
+		"require": "./cjs/mysql-to-schema.js"
 	},
 	"files": [
 		"LICENSE",
@@ -34,16 +34,16 @@
 		"table"
 	],
 	"license": "LGPL-3.0-or-later",
-	"name": "@itrocks/mysql-to-table",
+	"name": "@itrocks/mysql-to-schema",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/itrocks-ts/mysql-to-table.git"
+		"url": "git+https://github.com/itrocks-ts/mysql-to-schema.git"
 	},
 	"scripts": {
 		"build": "npm run build:cjs && npm run build:esm",
 		"build:cjs": "tsc -p tsconfig.cjs.json",
 		"build:esm": "tsc -p tsconfig.esm.json"
 	},
-	"types": "./esm/mysql-to-table.d.ts",
-	"version": "0.0.2"
+	"types": "./esm/mysql-to-schema.d.ts",
+	"version": "0.0.3"
 }

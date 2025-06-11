@@ -1,6 +1,6 @@
-import { Column }      from '@itrocks/table-schema'
-import { Connection }  from 'mariadb'
-import { MysqlToType } from './mysql-to-type'
+import { Column }     from '@itrocks/schema'
+import { Connection } from 'mariadb'
+import { ToType }     from './to-type'
 
 export interface MysqlColumn
 {
@@ -14,12 +14,12 @@ export interface MysqlColumn
 	IS_NULLABLE:        'NO' | 'YES'
 }
 
-export class MysqlToColumn
+export class ToColumn
 {
 
 	constructor(
-		public connection:   Connection,
-		public mysqlToType = new MysqlToType()
+		public connection: Connection,
+		public toType    = new ToType()
 	) {}
 
 	async convert(columnName: string, tableName: string, databaseName?: string): Promise<Column>
@@ -49,7 +49,7 @@ export class MysqlToColumn
 
 	rowToColumn(row: MysqlColumn): Column
 	{
-		const type   = this.mysqlToType.convert(row.COLUMN_TYPE)
+		const type   = this.toType.convert(row.COLUMN_TYPE)
 		const column = new Column(row.COLUMN_NAME, type, {
 			autoIncrement: row.EXTRA.includes('auto_increment'),
 			canBeNull:     row.IS_NULLABLE === 'YES',
