@@ -120,7 +120,7 @@ export class ToType
 			case 'smallint':            return signed ? 32767 : 65535
 			case 'mediumint':           return signed ? 8388607 : 16777215
 			case 'int': case 'integer': return signed ? 2147483647 : 4294967295
-			case 'bigint':              return signed ? 2n**63n - 1n : 2n**64n - 1n
+			case 'bigint':              return signed ? (2n ** 63n - 1n) : (2n ** 64n - 1n)
 		}
 		return undefined
 	}
