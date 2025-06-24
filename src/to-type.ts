@@ -30,6 +30,7 @@ export class ToType
 			case 'bigint': case 'int': case 'integer': case 'mediumint': case 'smallint': case 'tinyint':
 				return new Type('integer', {
 					length:   this.length(rawType, mysqlType),
+					maxValue:  this.lengthMaxValue(mysqlType, !mysqlType.includes('unsigned')),
 					signed:   !mysqlType.includes('unsigned'),
 					zeroFill: mysqlType.includes('zerofill')
 				})
@@ -110,6 +111,18 @@ export class ToType
 				Math.min(mysqlType.indexOf(')', position), (mysqlType + ',').indexOf(',', position))
 			)
 			: this.defaultLength(rawType)
+	}
+
+	lengthMaxValue(mysqlType: string, signed: boolean): bigint | number | undefined
+	{
+		switch (mysqlType) {
+			case 'tinyint':             return signed ? 127 : 255
+			case 'smallint':            return signed ? 32767 : 65535
+			case 'mediumint':           return signed ? 8388607 : 16777215
+			case 'int': case 'integer': return signed ? 2147483647 : 4294967295
+			case 'bigint':              return signed ? 2n**63n - 1n : 2n**64n - 1n
+		}
+		return undefined
 	}
 
 	normalize(type: Type)
