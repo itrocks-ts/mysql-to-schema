@@ -50,6 +50,9 @@ export class ToColumn
 	rowToColumn(row: MysqlColumn): Column
 	{
 		const type   = this.toType.convert(row.COLUMN_TYPE)
+		if (row.COLLATION_NAME) {
+			type.collate = row.COLLATION_NAME
+		}
 		const column = new Column(row.COLUMN_NAME, type, {
 			autoIncrement: row.EXTRA.includes('auto_increment'),
 			canBeNull:     row.IS_NULLABLE === 'YES',

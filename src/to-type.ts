@@ -17,11 +17,11 @@ export class ToType
 			case 'boolean':
 				return new Type('boolean')
 			case 'date':
-				return new Type('date')
+				return new Type('date', { length: 10 })
 			case 'datetime':
-				return new Type('datetime')
+				return new Type('datetime', { length: 19 })
 			case 'decimal': case 'double': case 'float': case 'numeric': case 'real':
-				return new Type('float', {
+				return new Type((rawType === 'decimal') ? 'decimal' : 'float', {
 					length:    this.length(rawType, mysqlType),
 					precision: this.precision(rawType, mysqlType),
 					signed:    !mysqlType.includes('unsigned'),
@@ -35,8 +35,7 @@ export class ToType
 				})
 			case 'enum': case 'set':
 				return new Type(rawType, {
-					collate: this.collate(mysqlType),
-					values:  this.values(mysqlType)
+					values: this.values(mysqlType)
 				})
 			case 'time':
 				return new Type('time')
@@ -47,19 +46,9 @@ export class ToType
 		}
 		// char, longtext, mediumtext, text, tinytext, varchar
 		return new Type('string', {
-			collate:        this.collate(mysqlType),
 			length:         this.length(rawType, mysqlType),
 			variableLength: rawType.startsWith('var')
 		})
-	}
-
-	collate(mysqlType: string): string | undefined
-	{
-		const position = mysqlType.indexOf('collate ')
-		if (position > 0) {
-			const end = (mysqlType + ' ').indexOf(' ', position + 8)
-			return mysqlType.slice(position + 8, end)
-		}
 	}
 
 	defaultLength(rawType: string): number | undefined
@@ -135,7 +124,7 @@ export class ToType
 				else if (type.length > 16_777_215) type.length = 4_294_967_295
 				else if (type.length > 65_535)     type.length = 16_777_215
 				else if (type.length > 255)        type.length = 65_535
-				else                               type.length = 255
+				else if (type.length > 3)          Object.assign(type, { length: 255, variableLength: true })
 				break
 			case 'boolean':
 				type.length = 1
