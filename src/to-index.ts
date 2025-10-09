@@ -68,7 +68,11 @@ export class ToIndex
 			keys.push(this.rowToKey(row))
 		}
 		const row = rows[0]
-		return new Index(row.INDEX_NAME, keys, { type: row.INDEX_TYPE, unique: !row.NON_UNIQUE })
+		return new Index(
+			row.INDEX_NAME,
+			keys,
+			{ type: row.NON_UNIQUE ? 'key' : ((row.INDEX_NAME === 'PRIMARY') ? 'primary' : 'unique'), unique: !row.NON_UNIQUE }
+		)
 	}
 
 	rowToKey(row: MysqlIndexKey): IndexKey
