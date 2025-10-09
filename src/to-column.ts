@@ -58,8 +58,8 @@ export class ToColumn
 			canBeNull:     row.IS_NULLABLE === 'YES',
 			default:       row.COLUMN_DEFAULT
 		})
-		if ((column.default === null) && !column.canBeNull) {
-			column.default = undefined
+		if (((column.default === null) || (column.default === undefined)) && !column.canBeNull) {
+			column.default = (type.name === 'string') ? '' : undefined
 		}
 		return column
 	}
