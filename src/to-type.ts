@@ -152,12 +152,14 @@ export class ToType
 				type.length = 53
 				break
 			case 'integer':
-				if (type.length === undefined) type.length = 20
-				else if (type.length > 10)     type.length = 20
-				else if (type.length > 8)      type.length = 10
-				else if (type.length > 5)      type.length = 8
-				else if (type.length > 3)      type.length = 5
-				else                           type.length = 3
+				if (type.length === undefined) {
+					type.length = (type.maxValue === undefined) ? 20 : type.maxValue.toString().length
+				}
+				if (type.length > 10)     type.length = 20
+				else if (type.length > 8) type.length = 10
+				else if (type.length > 5) type.length = 8
+				else if (type.length > 3) type.length = 5
+				else                      type.length = 3
 				break
 			case 'enum': case 'set':
 				type.length = 1_048_575
