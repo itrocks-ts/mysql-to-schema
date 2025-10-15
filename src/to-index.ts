@@ -43,7 +43,6 @@ export class ToIndex
 			+ ' FROM information_schema.STATISTICS'
 			+ ` WHERE TABLE_SCHEMA = ${databaseName} AND TABLE_NAME = '${tableName}'`
 			+ ' ORDER BY INDEX_NAME, SEQ_IN_INDEX'
-		console.log(query)
 		const indexes: Index[] = []
 		let   lastRow: MysqlIndexRow | undefined = undefined
 		const rows:    MysqlIndexRow[] = []
