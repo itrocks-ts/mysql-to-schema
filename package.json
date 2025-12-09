@@ -9,7 +9,7 @@
 	},
 	"description": "Extracts a MySQL table structure and converts it into a table schema",
 	"devDependencies": {
-		"typescript": "~5.8"
+		"typescript": "~5.9"
 	},
 	"engines": {
 		"node": ">=18"
@@ -45,5 +45,5 @@
 		"build:esm": "tsc -p tsconfig.esm.json"
 	},
 	"types": "./esm/mysql-to-schema.d.ts",
-	"version": "0.0.8"
+	"version": "0.0.9"
 }
