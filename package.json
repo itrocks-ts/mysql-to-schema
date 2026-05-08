@@ -9,20 +9,17 @@
 	},
 	"description": "Extracts a MySQL table structure and converts it into a table schema",
 	"devDependencies": {
-		"typescript": "~5.9"
+		"typescript": "^6.0"
 	},
 	"engines": {
-		"node": ">=18"
+		"node": ">=24"
 	},
-	"exports": {
-		"import": "./esm/mysql-to-schema.js",
-		"require": "./cjs/mysql-to-schema.js"
-	},
+	"exports": "./cjs/mysql-to-schema.js",
 	"files": [
 		"LICENSE",
 		"README.md",
-		"*/*.d.ts",
-		"*/*.js"
+		"cjs",
+		"!*.map"
 	],
 	"homepage": "https://it.rocks",
 	"keywords": [
@@ -42,10 +39,7 @@
 		"url": "git+https://github.com/itrocks-ts/mysql-to-schema.git"
 	},
 	"scripts": {
-		"build": "npm run build:cjs && npm run build:esm",
-		"build:cjs": "tsc -p tsconfig.cjs.json",
-		"build:esm": "tsc -p tsconfig.esm.json"
+		"build": "tsc"
 	},
-	"types": "./esm/mysql-to-schema.d.ts",
-	"version": "0.0.10"
+	"version": "0.1.0"
 }
